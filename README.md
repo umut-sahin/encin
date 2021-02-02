@@ -1,15 +1,14 @@
 <div align="center">
-  <h1 style="border-bottom: none">encin</h1>
+  <b>encin</b>
   A magical runtime made with user-level context switches, rainbows, and io_uring. Also unicorns.
-  <h2></h2>
 </div>
 
 ## Requirements
 
-- Linux Kernel v5.10+
-- gcc v9.0+
-- CMake v3.10+
-- liburing v0.7+
+- Linux Kernel **v5.10+**
+- gcc **v9.0+**
+- CMake **v3.10+**
+- liburing **v0.7+**
 
 ## Installation
 
