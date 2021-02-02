@@ -1,5 +1,5 @@
 <div align="center">
-  <b>encin</b>
+  <h1>encin</h1>
   A magical runtime made with user-level context switches, rainbows, and io_uring. Also unicorns.
 </div>
 
