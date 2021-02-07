@@ -10,6 +10,8 @@ add_library(
     encin
 
     src/main.c
+    src/stack.c
+    src/status.c
 )
 
 set_target_properties(
