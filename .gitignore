@@ -37,6 +37,9 @@ dkms.conf
 build
 dist
 
+# Doxygen
+docs
+
 # JetBrains IDEs
 .idea
 

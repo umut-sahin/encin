@@ -1,0 +1,51 @@
+name: Document
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  document:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Copy README
+        run: cp README.md include/README.md
+
+      - name: Generate Documentation
+        uses: mattnotmitt/doxygen-action@v1.1.0
+        with:
+          working-directory: "./include"
+          doxyfile-path: "../Doxyfile"
+
+      - name: Replace `Main Page`
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/Main Page/Homepage/g'
+
+      - name: Remove `File Reference`
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/ File Reference//g'
+
+      - name: Remove `Directory Reference`
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/ Directory Reference//g'
+
+      - name: Remove `Source File`
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/ Source File//g'
+
+      - name: Replace Titles
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/<title>encin:\ /<title>/g' && find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/<\/title>/ | encin<\/title>/g'
+
+      - name: Remove Headers
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/<div id="titlearea">(\R|.)*?<table cellspacing="0" cellpadding="0">(\R|.)*?<\/table>(\R|.)*?<\/div>//g'
+
+      - name: Remove Homepage Title
+        run: sudo perl -i -0pe 's/<div class="header">(\R|.)*?<div class="headertitle">(\R|.)*?<div class="title">(\R|.)*?<\/div>(\R|.)*?<\/div>(\R|.)*?<\/div>//g' docs/html/index.html
+
+      - name: Remove Footers
+        run: find ./docs/html -type f -print0 | sudo xargs -0 perl -i -0pe 's/<hr class="footer"\/>(\R|.)*?<address class="footer">(\R|.)*?<\/address>//g'
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
