@@ -1,0 +1,22 @@
+name: Build
+on:
+  - pull_request
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install CMake
+        uses: jwlawson/actions-setup-cmake@v1.7
+        with:
+          cmake-version: '3.10.x'
+
+      - name: Build
+        run: |
+          mkdir -p build/debug && cd build/debug &&
+          cmake -DCMAKE_MAKE_PROGRAM=make -DCMAKE_C_COMPILER=gcc-9 -DCMAKE_BUILD_TYPE=Debug ../.. &&
+          make --no-print-directory all
