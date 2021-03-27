@@ -11,6 +11,7 @@ add_library(
 
     src/main.c
     src/result.c
+    src/signal.c
     src/stack.c
     src/status.c
 )
@@ -36,6 +37,8 @@ target_compile_options(
 )
 
 target_include_directories(encin PUBLIC include)
+
+target_link_libraries(encin PUBLIC pthread)
 
 if (CMAKE_PROJECT_NAME STREQUAL encin)
     add_subdirectory(examples)
