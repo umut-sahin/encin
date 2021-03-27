@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <sys/mman.h>
 
-void *encin_stack_acquire(encin_stack_size size) +{
+void *encin_stack_acquire(encin_stack_size size) {
     assert(
         "(encin usage error on encin_stack_acquire: size is not an instance of encin_stack_size)"
             && (size >= ENCIN_STACK_8K && size <= ENCIN_STACK_4G)
