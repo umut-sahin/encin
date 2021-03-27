@@ -13,7 +13,7 @@ jobs:
       - name: Install CMake
         uses: jwlawson/actions-setup-cmake@v1.7
         with:
-          cmake-version: '3.10.x'
+          cmake-version: '3.17.x'
 
       - name: Build
         run: |
