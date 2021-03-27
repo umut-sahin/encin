@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.17)
 
 project(
     encin
@@ -10,6 +10,9 @@ add_library(
     encin
 
     src/main.c
+    src/result.c
+    src/stack.c
+    src/status.c
 )
 
 set_target_properties(
