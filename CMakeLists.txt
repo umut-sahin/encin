@@ -10,6 +10,7 @@ add_library(
     encin
 
     src/main.c
+    src/result.c
     src/stack.c
     src/status.c
 )
