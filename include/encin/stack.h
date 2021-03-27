@@ -2,6 +2,7 @@
 
 typedef enum {
 
+    ENCIN_STACK_8K = 13,
     ENCIN_STACK_16K = 14,
     ENCIN_STACK_32K = 15,
     ENCIN_STACK_64K = 16,
@@ -21,9 +22,11 @@ typedef enum {
     ENCIN_STACK_512M = 29,
 
     ENCIN_STACK_1G = 30,
+    ENCIN_STACK_2G = 31,
+    ENCIN_STACK_4G = 32,
 
 } encin_stack_size;
 
-char *encin_stack_acquire(encin_stack_size size);
+void *encin_stack_acquire(encin_stack_size size);
 
-void encin_stack_release(encin_stack_size size, char *stack);
+void encin_stack_release(encin_stack_size size, void *stack);
