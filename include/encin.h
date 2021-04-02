@@ -2,6 +2,8 @@
 
 #include <encin/await.h>
 #include <encin/info.h>
+#include <encin/job.h>
+#include <encin/queue.h>
 #include <encin/result.h>
 #include <encin/signal.h>
 #include <encin/spawn.h>
