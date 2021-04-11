@@ -1,10 +1,19 @@
 #pragma once
 
 #include <encin/job.h>
+#include <pthread.h>
 #include <stddef.h>
 
 typedef struct encin_queue {
+    unsigned short blocked_thread_count;
 
+    size_t capacity;
+    size_t top;
+    size_t bottom;
+    encin_job **buffer;
+
+    pthread_mutex_t lock;
+    pthread_cond_t cv;
 } encin_queue;
 
 int encin_queue_create(encin_queue *queue, size_t capacity);
