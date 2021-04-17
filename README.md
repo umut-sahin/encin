@@ -6,8 +6,9 @@
 ## Requirements
 
 - Linux Kernel **v5.11+**
-- gcc **v10.0+**
 - CMake **v3.17+**
+- gcc **v10.0+**
+- glibc **v2.28+**
 - liburing **v2.0+**
 
 ## Installation
