@@ -10,6 +10,7 @@ add_library(
     encin
 
     src/main.c
+    src/queue.c
     src/result.c
     src/signal.c
     src/stack.c
