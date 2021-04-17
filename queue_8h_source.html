@@ -61,21 +61,30 @@ $(function() {
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;encin/job.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="structencin__queue.html">    6</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structencin__queue.html">encin_queue</a> {</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;} <a class="code" href="structencin__queue.html">encin_queue</a>;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keywordtype">int</span> encin_queue_create(<a class="code" href="structencin__queue.html">encin_queue</a> *queue, <span class="keywordtype">size_t</span> capacity);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keywordtype">int</span> encin_queue_push(<a class="code" href="structencin__queue.html">encin_queue</a> *queue, <a class="code" href="structencin__job.html">encin_job</a> *job);</div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;pthread.h&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="structencin__queue.html">    7</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structencin__queue.html">encin_queue</a> {</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordtype">size_t</span> capacity;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordtype">size_t</span> top;</div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <span class="keywordtype">size_t</span> bottom;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="structencin__job.html">encin_job</a> **buffer;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<a class="code" href="structencin__job.html">encin_job</a> *encin_queue_pop(<a class="code" href="structencin__queue.html">encin_queue</a> *queue);</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keywordtype">void</span> encin_queue_destroy(<a class="code" href="structencin__queue.html">encin_queue</a> *queue);</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    pthread_mutex_t lock;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    pthread_cond_t cv;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;} <a class="code" href="structencin__queue.html">encin_queue</a>;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">int</span> encin_queue_create(<a class="code" href="structencin__queue.html">encin_queue</a> *queue, <span class="keywordtype">size_t</span> capacity);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keywordtype">int</span> encin_queue_push(<a class="code" href="structencin__queue.html">encin_queue</a> *queue, <a class="code" href="structencin__job.html">encin_job</a> *job);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<a class="code" href="structencin__job.html">encin_job</a> *encin_queue_pop(<a class="code" href="structencin__queue.html">encin_queue</a> *queue);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">void</span> encin_queue_destroy(<a class="code" href="structencin__queue.html">encin_queue</a> *queue);</div>
 <div class="ttc" id="astructencin__job_html"><div class="ttname"><a href="structencin__job.html">encin_job</a></div><div class="ttdef"><b>Definition:</b> job.h:3</div></div>
-<div class="ttc" id="astructencin__queue_html"><div class="ttname"><a href="structencin__queue.html">encin_queue</a></div><div class="ttdef"><b>Definition:</b> queue.h:6</div></div>
+<div class="ttc" id="astructencin__queue_html"><div class="ttname"><a href="structencin__queue.html">encin_queue</a></div><div class="ttdef"><b>Definition:</b> queue.h:7</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 
