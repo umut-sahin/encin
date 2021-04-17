@@ -5,8 +5,7 @@
 #include <stddef.h>
 
 typedef struct encin_queue {
-    unsigned short blocked_thread_count;
-
+    
     size_t capacity;
     size_t top;
     size_t bottom;
@@ -14,6 +13,7 @@ typedef struct encin_queue {
 
     pthread_mutex_t lock;
     pthread_cond_t cv;
+
 } encin_queue;
 
 int encin_queue_create(encin_queue *queue, size_t capacity);
