@@ -7,6 +7,9 @@ const char *encin_result_description(encin_result result) {
         case ENCIN_SUCCESS: {
             return "success";
         }
+        case ENCIN_TASK_CREATION_FAILURE: {
+            return "task creation failure";
+        }
         case ENCIN_STACK_ACQUIRY_FAILURE: {
             return "stack acquiry failure";
         }

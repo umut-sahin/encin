@@ -4,7 +4,9 @@ typedef enum {
 
     ENCIN_SUCCESS = 0,
 
-    ENCIN_STACK_ACQUIRY_FAILURE = -1,
+    ENCIN_TASK_CREATION_FAILURE = -1,
+
+    ENCIN_STACK_ACQUIRY_FAILURE = -2,
 
 } encin_result;
 
