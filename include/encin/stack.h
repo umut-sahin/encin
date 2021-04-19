@@ -2,7 +2,6 @@
 
 typedef enum {
 
-    ENCIN_STACK_8K = 13,
     ENCIN_STACK_16K = 14,
     ENCIN_STACK_32K = 15,
     ENCIN_STACK_64K = 16,

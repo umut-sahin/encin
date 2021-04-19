@@ -1,8 +1,11 @@
 #include <encin.h>
 #include <errno.h>
-#include <stdbool.h>
+#include <pthread.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 
 static int encin_queue_grow(encin_queue *queue) {
     if (queue->capacity > SIZE_MAX / 2) {
@@ -96,8 +99,30 @@ int encin_queue_push(encin_queue *queue, encin_job *job) {
 
     pthread_cond_signal(&queue->cv);
     pthread_mutex_unlock(&queue->lock);
-
     return 0;
+}
+
+size_t encin_queue_length(encin_queue *queue) {
+    if (queue->bottom <= queue->top) {
+        return queue->top - queue->bottom;
+    } else {
+        return queue->capacity - (queue->bottom - queue->top);
+    }
+}
+
+encin_job *encin_queue_try_pop(encin_queue *queue) {
+    if (queue->bottom == queue->top) {
+        return NULL;
+    }
+
+    encin_job *job = queue->buffer[queue->bottom];
+
+    queue->bottom++;
+    if (queue->bottom == queue->capacity) {
+        queue->bottom = 0;
+    }
+
+    return job;
 }
 
 encin_job *encin_queue_pop(encin_queue *queue) {
@@ -135,3 +160,7 @@ void encin_queue_destroy(encin_queue *queue) {
     pthread_mutex_destroy(&queue->lock);
 }
 
+
+encin_queue encin_job_queue;
+
+encin_queue encin_blocking_job_queue;
