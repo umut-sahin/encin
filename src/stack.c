@@ -7,7 +7,7 @@
 void *encin_stack_acquire(encin_stack_size size) {
     assert(
         "(encin usage error on encin_stack_acquire: size is not an instance of encin_stack_size)"
-            && (size >= ENCIN_STACK_8K && size <= ENCIN_STACK_4G)
+            && (size >= ENCIN_STACK_16K && size <= ENCIN_STACK_4G)
     );
 
     int flags = MAP_PRIVATE | MAP_ANONYMOUS;
@@ -29,7 +29,7 @@ void *encin_stack_acquire(encin_stack_size size) {
 void encin_stack_release(encin_stack_size size, void *stack) {
     assert(
         "(encin usage error on encin_stack_acquire: size is not an instance of encin_stack_size)"
-            && (size >= ENCIN_STACK_8K && size <= ENCIN_STACK_4G)
+            && (size >= ENCIN_STACK_16K && size <= ENCIN_STACK_4G)
     );
 
     if (munmap(stack, 1 << size) == -1) {
