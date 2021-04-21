@@ -58,9 +58,12 @@
         {                                                                                          \
                                                                                                    \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
-            = function()                                                                           \
+            = function(),                                                                          \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_0(function, stack_size)                                               \
@@ -78,9 +81,12 @@
         {                                                                                          \
                                                                                                    \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
-            = function()                                                                           \
+            = function(),                                                                          \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_0(function, stack_size)                                                   \
@@ -97,8 +103,11 @@
         {                                                                                          \
                                                                                                    \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
-        function()                                                                                 \
+        function(),                                                                                \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_0(function, stack_size)                                          \
@@ -115,8 +124,11 @@
         {                                                                                          \
                                                                                                    \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
-        function()                                                                                 \
+        function(),                                                                                \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_0(function, stack_size)                                               \
@@ -133,8 +145,11 @@
         {                                                                                          \
                                                                                                    \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
-        function()                                                                                 \
+        function(),                                                                                \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_0(function, stack_size)                                      \
@@ -151,8 +166,11 @@
         {                                                                                          \
                                                                                                    \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
-        function()                                                                                 \
+        function(),                                                                                \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -172,11 +190,14 @@
         {                                                                                          \
             _encin_container->evaluated_arg1 = (arg1);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
                 container->evaluated_arg1                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_1(function, arg1, stack_size)                                         \
@@ -195,11 +216,14 @@
         {                                                                                          \
             _encin_container->evaluated_arg1 = (arg1);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
                 container->evaluated_arg1                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_1(function, arg1, stack_size)                                             \
@@ -217,10 +241,13 @@
         {                                                                                          \
             _encin_container->evaluated_arg1 = (arg1);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_1(function, arg1, stack_size)                                    \
@@ -238,10 +265,13 @@
         {                                                                                          \
             _encin_container->evaluated_arg1 = (arg1);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_1(function, arg1, stack_size)                                         \
@@ -259,10 +289,13 @@
         {                                                                                          \
             _encin_container->evaluated_arg1 = (arg1);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_1(function, arg1, stack_size)                                \
@@ -280,10 +313,13 @@
         {                                                                                          \
             _encin_container->evaluated_arg1 = (arg1);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -305,12 +341,15 @@
             _encin_container->evaluated_arg1 = (arg1);                                             \
             _encin_container->evaluated_arg2 = (arg2);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
                 container->evaluated_arg1,                                                         \
                 container->evaluated_arg2                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_2(function, arg1, arg2, stack_size)                                   \
@@ -331,12 +370,15 @@
             _encin_container->evaluated_arg1 = (arg1);                                             \
             _encin_container->evaluated_arg2 = (arg2);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
                 container->evaluated_arg1,                                                         \
                 container->evaluated_arg2                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_2(function, arg1, arg2, stack_size)                                       \
@@ -356,11 +398,14 @@
             _encin_container->evaluated_arg1 = (arg1);                                             \
             _encin_container->evaluated_arg2 = (arg2);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_2(function, arg1, arg2, stack_size)                              \
@@ -380,11 +425,14 @@
             _encin_container->evaluated_arg1 = (arg1);                                             \
             _encin_container->evaluated_arg2 = (arg2);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_2(function, arg1, arg2, stack_size)                                   \
@@ -404,11 +452,14 @@
             _encin_container->evaluated_arg1 = (arg1);                                             \
             _encin_container->evaluated_arg2 = (arg2);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_2(function, arg1, arg2, stack_size)                          \
@@ -428,11 +479,14 @@
             _encin_container->evaluated_arg1 = (arg1);                                             \
             _encin_container->evaluated_arg2 = (arg2);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -456,13 +510,16 @@
             _encin_container->evaluated_arg2 = (arg2);                                             \
             _encin_container->evaluated_arg3 = (arg3);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
                 container->evaluated_arg1,                                                         \
                 container->evaluated_arg2,                                                         \
                 container->evaluated_arg3                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_3(function, arg1, arg2, arg3, stack_size)                             \
@@ -485,13 +542,16 @@
             _encin_container->evaluated_arg2 = (arg2);                                             \
             _encin_container->evaluated_arg3 = (arg3);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
                 container->evaluated_arg1,                                                         \
                 container->evaluated_arg2,                                                         \
                 container->evaluated_arg3                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_3(function, arg1, arg2, arg3, stack_size)                                 \
@@ -513,12 +573,15 @@
             _encin_container->evaluated_arg2 = (arg2);                                             \
             _encin_container->evaluated_arg3 = (arg3);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_3(function, arg1, arg2, arg3, stack_size)                        \
@@ -540,12 +603,15 @@
             _encin_container->evaluated_arg2 = (arg2);                                             \
             _encin_container->evaluated_arg3 = (arg3);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_3(function, arg1, arg2, arg3, stack_size)                             \
@@ -567,12 +633,15 @@
             _encin_container->evaluated_arg2 = (arg2);                                             \
             _encin_container->evaluated_arg3 = (arg3);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_3(function, arg1, arg2, arg3, stack_size)                    \
@@ -594,12 +663,15 @@
             _encin_container->evaluated_arg2 = (arg2);                                             \
             _encin_container->evaluated_arg3 = (arg3);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -625,6 +697,7 @@
             _encin_container->evaluated_arg3 = (arg3);                                             \
             _encin_container->evaluated_arg4 = (arg4);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
@@ -632,7 +705,9 @@
                 container->evaluated_arg2,                                                         \
                 container->evaluated_arg3,                                                         \
                 container->evaluated_arg4                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_4(function, arg1, arg2, arg3, arg4, stack_size)                       \
@@ -657,6 +732,7 @@
             _encin_container->evaluated_arg3 = (arg3);                                             \
             _encin_container->evaluated_arg4 = (arg4);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
@@ -664,7 +740,9 @@
                 container->evaluated_arg2,                                                         \
                 container->evaluated_arg3,                                                         \
                 container->evaluated_arg4                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_4(function, arg1, arg2, arg3, arg4, stack_size)                           \
@@ -688,13 +766,16 @@
             _encin_container->evaluated_arg3 = (arg3);                                             \
             _encin_container->evaluated_arg4 = (arg4);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_4(function, arg1, arg2, arg3, arg4, stack_size)                  \
@@ -718,13 +799,16 @@
             _encin_container->evaluated_arg3 = (arg3);                                             \
             _encin_container->evaluated_arg4 = (arg4);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_4(function, arg1, arg2, arg3, arg4, stack_size)                       \
@@ -748,13 +832,16 @@
             _encin_container->evaluated_arg3 = (arg3);                                             \
             _encin_container->evaluated_arg4 = (arg4);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_4(function, arg1, arg2, arg3, arg4, stack_size)              \
@@ -778,13 +865,16 @@
             _encin_container->evaluated_arg3 = (arg3);                                             \
             _encin_container->evaluated_arg4 = (arg4);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
             container->evaluated_arg2,                                                             \
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -812,6 +902,7 @@
             _encin_container->evaluated_arg4 = (arg4);                                             \
             _encin_container->evaluated_arg5 = (arg5);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
@@ -820,7 +911,9 @@
                 container->evaluated_arg3,                                                         \
                 container->evaluated_arg4,                                                         \
                 container->evaluated_arg5                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_5(function, arg1, arg2, arg3, arg4, arg5, stack_size)                 \
@@ -847,6 +940,7 @@
             _encin_container->evaluated_arg4 = (arg4);                                             \
             _encin_container->evaluated_arg5 = (arg5);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
@@ -855,7 +949,9 @@
                 container->evaluated_arg3,                                                         \
                 container->evaluated_arg4,                                                         \
                 container->evaluated_arg5                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_5(function, arg1, arg2, arg3, arg4, arg5, stack_size)                     \
@@ -881,6 +977,7 @@
             _encin_container->evaluated_arg4 = (arg4);                                             \
             _encin_container->evaluated_arg5 = (arg5);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -888,7 +985,9 @@
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_5(function, arg1, arg2, arg3, arg4, arg5, stack_size)            \
@@ -914,6 +1013,7 @@
             _encin_container->evaluated_arg4 = (arg4);                                             \
             _encin_container->evaluated_arg5 = (arg5);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -921,7 +1021,9 @@
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_5(function, arg1, arg2, arg3, arg4, arg5, stack_size)                 \
@@ -947,6 +1049,7 @@
             _encin_container->evaluated_arg4 = (arg4);                                             \
             _encin_container->evaluated_arg5 = (arg5);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -954,7 +1057,9 @@
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_5(function, arg1, arg2, arg3, arg4, arg5, stack_size)        \
@@ -980,6 +1085,7 @@
             _encin_container->evaluated_arg4 = (arg4);                                             \
             _encin_container->evaluated_arg5 = (arg5);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -987,7 +1093,9 @@
             container->evaluated_arg3,                                                             \
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -1017,6 +1125,7 @@
             _encin_container->evaluated_arg5 = (arg5);                                             \
             _encin_container->evaluated_arg6 = (arg6);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
@@ -1026,7 +1135,9 @@
                 container->evaluated_arg4,                                                         \
                 container->evaluated_arg5,                                                         \
                 container->evaluated_arg6                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_6(function, arg1, arg2, arg3, arg4, arg5, arg6, stack_size)           \
@@ -1055,6 +1166,7 @@
             _encin_container->evaluated_arg5 = (arg5);                                             \
             _encin_container->evaluated_arg6 = (arg6);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         container->result                                                                          \
             = function(                                                                            \
@@ -1064,7 +1176,9 @@
                 container->evaluated_arg4,                                                         \
                 container->evaluated_arg5,                                                         \
                 container->evaluated_arg6                                                          \
-            )                                                                                      \
+            ),                                                                                     \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_void_6(function, arg1, arg2, arg3, arg4, arg5, arg6, stack_size)               \
@@ -1092,6 +1206,7 @@
             _encin_container->evaluated_arg5 = (arg5);                                             \
             _encin_container->evaluated_arg6 = (arg6);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -1100,7 +1215,9 @@
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5,                                                             \
             container->evaluated_arg6                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_blocking_void_6(function, arg1, arg2, arg3, arg4, arg5, arg6, stack_size)      \
@@ -1128,6 +1245,7 @@
             _encin_container->evaluated_arg5 = (arg5);                                             \
             _encin_container->evaluated_arg6 = (arg6);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -1136,7 +1254,9 @@
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5,                                                             \
             container->evaluated_arg6                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize                                                                             \
     )
 
 #define encin_spawn_detached_6(function, arg1, arg2, arg3, arg4, arg5, arg6, stack_size)           \
@@ -1164,6 +1284,7 @@
             _encin_container->evaluated_arg5 = (arg5);                                             \
             _encin_container->evaluated_arg6 = (arg6);                                             \
         },                                                                                         \
+        false,                                                                                     \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -1172,7 +1293,9 @@
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5,                                                             \
             container->evaluated_arg6                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 #define encin_spawn_blocking_detached_6(function, arg1, arg2, arg3, arg4, arg5, arg6, stack_size)  \
@@ -1200,6 +1323,7 @@
             _encin_container->evaluated_arg5 = (arg5);                                             \
             _encin_container->evaluated_arg6 = (arg6);                                             \
         },                                                                                         \
+        true,                                                                                      \
                                                                                                    \
         function(                                                                                  \
             container->evaluated_arg1,                                                             \
@@ -1208,7 +1332,9 @@
             container->evaluated_arg4,                                                             \
             container->evaluated_arg5,                                                             \
             container->evaluated_arg6                                                              \
-        )                                                                                          \
+        ),                                                                                         \
+                                                                                                   \
+        encin_finalize_detached                                                                    \
     )
 
 
@@ -1217,7 +1343,9 @@
     _encin_invalid_stack_size_message,                                                             \
     _encin_container_definition,                                                                   \
     _encin_initializer,                                                                            \
-    _encin_runner                                                                                  \
+    _encin_is_blocking,                                                                            \
+    _encin_runner,                                                                                 \
+    _encin_finalizer                                                                               \
 ) ({                                                                                               \
     assert(                                                                                        \
         _encin_invalid_stack_size_message                                                          \
@@ -1230,10 +1358,12 @@
     _encin_container == NULL                                                                       \
     ? ({                                                                                           \
         encin_status = ENCIN_TASK_CREATION_FAILURE;                                                \
-        (struct _encin_container_definition *)NULL;                                                \
+        (typeof(_encin_container))NULL;                                                            \
     })                                                                                             \
     : ({                                                                                           \
         _encin_initializer                                                                         \
+                                                                                                   \
+        _encin_container->job.is_blocking = _encin_is_blocking;                                    \
                                                                                                    \
         _encin_container->job.encin_status_ = encin_status;                                        \
         _encin_container->job.errno_ = errno;                                                      \
@@ -1241,21 +1371,41 @@
         _encin_container->job.is_scheduled = false;                                                \
         getcontext(&_encin_container->job.context);                                                \
                                                                                                    \
-        _encin_container->job.context_.uc_stack.ss_size                                            \
+        _encin_container->job.context.uc_stack.ss_size                                             \
             = 1 << _encin_stack_size;                                                              \
-        _encin_container->job.context_.uc_stack.ss_sp                                              \
+        _encin_container->job.context.uc_stack.ss_sp                                               \
             = encin_stack_acquire(_encin_stack_size);                                              \
                                                                                                    \
-        _encin_container->job.context_.uc_stack.ss_sp == NULL                                      \
+        _encin_container->job.context.uc_stack.ss_sp == NULL                                       \
         ? ({                                                                                       \
             free(_encin_container);                                                                \
-            (struct _encin_container_definition *)NULL;                                            \
+            encin_status = ENCIN_STACK_ACQUIRY_FAILURE;                                            \
+            (typeof(_encin_container))NULL;                                                        \
         })                                                                                         \
         : ({                                                                                       \
-            void ignitor(struct _encin_container_definition *container) {                          \
+            void ignitor(typeof(_encin_container) container) {                                     \
                 _encin_runner;                                                                     \
+                _encin_finalizer(_encin_stack_size);                                               \
             }                                                                                      \
-            makecontext(&_encin_container->job.context_, ignitor, 1, _encin_container);            \
+            makecontext(                                                                           \
+                &_encin_container->job.context,                                                    \
+                (void (*)(void))ignitor,                                                           \
+                1, _encin_container                                                                \
+            );                                                                                     \
+                                                                                                   \
+            encin_schedule(&_encin_container->job) == -1                                           \
+            ? ({                                                                                   \
+                encin_stack_release(                                                               \
+                    _encin_stack_size,                                                             \
+                    _encin_container->job.context.uc_stack.ss_sp                                   \
+                );                                                                                 \
+                free(_encin_container);                                                            \
+                encin_status = ENCIN_JOB_SUBMISSION_FAILURE;                                       \
+                (typeof(_encin_container))NULL;                                                    \
+            })                                                                                     \
+            : ({                                                                                   \
+                _encin_container;                                                                  \
+            });                                                                                    \
         });                                                                                        \
     });                                                                                            \
 })

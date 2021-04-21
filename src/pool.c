@@ -12,12 +12,25 @@
 #include <unistd.h>
 
 
+static thread_local encin_stack_size stack_size_to_be_released = 0;
+
+static thread_local void *stack_to_be_released = NULL;
+
+static thread_local ucontext_t releaser_context = { 0 };
+
+
 static thread_local ucontext_t worker_context = { 0 };
 
 static thread_local encin_job *active_job = NULL;
 
 static void *worker(void *argument) {
     (void)argument;
+
+    getcontext(&releaser_context);
+    encin_stack_release(stack_size_to_be_released, stack_to_be_released);
+
+    stack_size_to_be_released = 0;
+    stack_to_be_released = NULL;
 
     getcontext(&worker_context);
 
@@ -55,14 +68,22 @@ static void *blocking_worker(void *argument) {
 
     pthread_mutex_lock(lock);
     while (true) {
-        idle_blocking_thread_count -= 1;
         if (shutting_down) {
             break;
         }
 
+        idle_blocking_thread_count -= 1;
         while (true) {
             active_job = encin_queue_try_pop(&encin_blocking_job_queue);
-            if (active_job != NULL) {
+            if (active_job == NULL) {
+                break;
+            } else {
+                getcontext(&releaser_context);
+
+                encin_stack_release(stack_size_to_be_released, stack_to_be_released);
+                stack_size_to_be_released = 0;
+                stack_to_be_released = NULL;
+
                 getcontext(&worker_context);
                 if (active_job != NULL) {
                     pthread_mutex_unlock(lock);
@@ -75,26 +96,68 @@ static void *blocking_worker(void *argument) {
                 } else {
                     pthread_mutex_lock(lock);
                 }
-            } else {
-                break;
             }
         }
         idle_blocking_thread_count += 1;
 
         int result = pthread_cond_timedwait(cv, lock, &timeout);
         if (result == ETIMEDOUT && encin_queue_length(&encin_blocking_job_queue) == 0) {
-            blocking_thread_count -= 1;
-            idle_blocking_thread_count -= 1;
             break;
         }
     }
-    pthread_mutex_unlock(lock);
+    blocking_thread_count -= 1;
+    idle_blocking_thread_count -= 1;
 
+    pthread_mutex_unlock(lock);
     return NULL;
 }
 
 
-void encin_deschedule() {
+int encin_schedule(encin_job *job) {
+    if (job == NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if (job->is_blocking) {
+        int result;
+
+        result = pthread_mutex_lock(&encin_blocking_job_queue.lock);
+        if (result != 0) {
+            errno = result;
+            return -1;
+        }
+
+        if (encin_queue_push_without_locking(&encin_blocking_job_queue, job) != 0) {
+            pthread_mutex_unlock(&encin_blocking_job_queue.lock);
+            return -1;
+        }
+
+        switch (encin_blocking_pool_grow()) {
+            case -1: {
+                encin_queue_try_pop(&encin_blocking_job_queue);
+                pthread_mutex_unlock(&encin_blocking_job_queue.lock);
+                return -1;
+            }
+            case 0: {
+                pthread_cond_signal(&encin_blocking_job_queue.cv);
+                break;
+            }
+            case 1: {
+                break;
+            }
+        }
+        pthread_mutex_unlock(&encin_blocking_job_queue.lock);
+    } else {
+        if (encin_queue_push(&encin_job_queue, job) != 0) {
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+void encin_deschedule(void) {
     assert(active_job != NULL);
 
     active_job->encin_status_ = encin_status;
@@ -108,6 +171,24 @@ void encin_deschedule() {
         active_job = NULL;
         setcontext(&worker_context);
     }
+}
+
+void encin_finalize(encin_stack_size stack_size) {
+    stack_size_to_be_released = stack_size;
+    stack_to_be_released = active_job->context.uc_stack.ss_sp;
+
+    active_job = NULL;
+    setcontext(&releaser_context);
+}
+
+void encin_finalize_detached(encin_stack_size stack_size) {
+    stack_size_to_be_released = stack_size;
+    stack_to_be_released = active_job->context.uc_stack.ss_sp;
+
+    free(active_job); // this causes problems...
+
+    active_job = NULL;
+    setcontext(&releaser_context);
 }
 
 
@@ -250,12 +331,23 @@ int encin_blocking_pool_grow(void) {
         = blocking_thread_count < ENCIN_BLOCKING_POOL_SIZE_LIMIT;
 
     if (there_arent_enough_threads && pool_size_limit_isnt_reached) {
-        blocking_thread_count += 1;
-        idle_blocking_thread_count += 1;
+
+        // TODO: minimize stack
 
         pthread_t tid;
-        pthread_create(&tid, NULL, blocking_worker, NULL);
-        pthread_detach(tid);
+        int result = pthread_create(&tid, NULL, blocking_worker, NULL);
+        if (result != 0) {
+            if (blocking_thread_count == 0) {
+                errno = result;
+                return -1;
+            }
+        } else {
+            blocking_thread_count += 1;
+            idle_blocking_thread_count += 1;
+
+            pthread_detach(tid);
+            return 1;
+        }
     }
 
     return 0;

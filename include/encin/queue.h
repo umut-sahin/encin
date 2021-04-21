@@ -21,6 +21,8 @@ int encin_queue_create(encin_queue *queue, size_t capacity);
 
 int encin_queue_push(encin_queue *queue, encin_job *job);
 
+int encin_queue_push_without_locking(encin_queue *queue, encin_job *job);
+
 size_t encin_queue_length(encin_queue *queue);
 
 encin_job *encin_queue_pop(encin_queue *queue);

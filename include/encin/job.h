@@ -6,6 +6,8 @@
 
 typedef struct encin_job {
 
+    bool is_blocking;
+
     encin_result encin_status_;
     int errno_;
 

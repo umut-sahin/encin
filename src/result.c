@@ -13,6 +13,9 @@ const char *encin_result_description(encin_result result) {
         case ENCIN_STACK_ACQUIRY_FAILURE: {
             return "stack acquiry failure";
         }
+        case ENCIN_JOB_SUBMISSION_FAILURE: {
+            return "job submission failure";
+        }
         default: {
             assert(
                 "(encin usage error on encin_result_description: result is not an instance of encin_result)"

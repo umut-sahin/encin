@@ -102,6 +102,31 @@ int encin_queue_push(encin_queue *queue, encin_job *job) {
     return 0;
 }
 
+int encin_queue_push_without_locking(encin_queue *queue, encin_job *job) {
+    if (queue->bottom <= queue->top) {
+        if (queue->top == queue->capacity && queue->bottom == 0) {
+            if (encin_queue_grow(queue) == -1) {
+                return -1;
+            }
+        }
+    } else {
+        if (queue->bottom - 1 == queue->top) {
+            if (encin_queue_grow(queue) == -1) {
+                return -1;
+            }
+        }
+    }
+
+    queue->buffer[queue->top] = job;
+
+    queue->top++;
+    if (queue->top == queue->capacity) {
+        queue->top = 0;
+    }
+
+    return 0;
+}
+
 size_t encin_queue_length(encin_queue *queue) {
     if (queue->bottom <= queue->top) {
         return queue->top - queue->bottom;

@@ -1,8 +1,15 @@
 #pragma once
 
+#include <encin/stack.h>
 #include <limits.h>
 
-void encin_deschedule();
+int encin_schedule(encin_job *job);
+
+void encin_deschedule(void);
+
+void encin_finalize(encin_stack_size stack_size);
+
+void encin_finalize_detached(encin_stack_size stack_size);
 
 
 #ifndef ENCIN_POOL_SIZE
@@ -23,7 +30,7 @@ void encin_pool_stop(void);
 
 
 #ifndef ENCIN_BLOCKING_POOL_SIZE_LIMIT
-#define ENCIN_BLOCKING_POOL_SIZE_LIMIT (512)
+#define ENCIN_BLOCKING_POOL_SIZE_LIMIT (1)
 #endif
 static_assert(
     ENCIN_BLOCKING_POOL_SIZE_LIMIT >= 0,
