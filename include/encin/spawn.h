@@ -6,6 +6,7 @@
 #include <encin/stack.h>
 #include <encin/status.h>
 #include <errno.h>
+#include <pthread.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -1376,8 +1377,14 @@
         _encin_container->job.context.uc_stack.ss_sp                                               \
             = encin_stack_acquire(_encin_stack_size);                                              \
                                                                                                    \
+        _encin_container->job.is_completed = false;                                                \
+        _encin_container->job.parent = encin_active_job();                                         \
+        _encin_container->job.awaiting = NULL;                                                     \
+        pthread_mutex_init(&_encin_container->job.lock, NULL);                                     \
+                                                                                                   \
         _encin_container->job.context.uc_stack.ss_sp == NULL                                       \
         ? ({                                                                                       \
+            pthread_mutex_destroy(&_encin_container->job.lock);                                    \
             free(_encin_container);                                                                \
             encin_status = ENCIN_STACK_ACQUIRY_FAILURE;                                            \
             (typeof(_encin_container))NULL;                                                        \
@@ -1399,6 +1406,7 @@
                     _encin_stack_size,                                                             \
                     _encin_container->job.context.uc_stack.ss_sp                                   \
                 );                                                                                 \
+                pthread_mutex_destroy(&_encin_container->job.lock);                                \
                 free(_encin_container);                                                            \
                 encin_status = ENCIN_JOB_SUBMISSION_FAILURE;                                       \
                 (typeof(_encin_container))NULL;                                                    \

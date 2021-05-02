@@ -1,9 +1,12 @@
 #pragma once
 
+#include <assert.h>
 #include <encin/stack.h>
 #include <limits.h>
 
 int encin_schedule(encin_job *job);
+
+encin_job *encin_active_job();
 
 void encin_deschedule(void);
 

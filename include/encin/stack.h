@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 typedef enum {
 
     ENCIN_STACK_16K = 14,
@@ -29,3 +31,13 @@ typedef enum {
 void *encin_stack_acquire(encin_stack_size size);
 
 void encin_stack_release(encin_stack_size size, void *stack);
+
+
+#ifndef ENCIN_MAIN_STACK_SIZE
+#define ENCIN_MAIN_STACK_SIZE (ENCIN_STACK_8M)
+#endif
+static_assert(
+    ENCIN_MAIN_STACK_SIZE >= ENCIN_STACK_16K
+        && ENCIN_MAIN_STACK_SIZE <= ENCIN_STACK_4G,
+    "ENCIN_MAIN_STACK_SIZE is not an instance of encin_stack_size"
+);

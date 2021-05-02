@@ -23,6 +23,8 @@ static thread_local ucontext_t worker_context = { 0 };
 
 static thread_local encin_job *active_job = NULL;
 
+static thread_local pthread_mutex_t *mutex_to_unlock = NULL;
+
 static void *worker(void *argument) {
     (void)argument;
 
@@ -33,6 +35,10 @@ static void *worker(void *argument) {
     stack_to_be_released = NULL;
 
     getcontext(&worker_context);
+    if (mutex_to_unlock != NULL) {
+        pthread_mutex_unlock(mutex_to_unlock);
+        mutex_to_unlock = NULL;
+    }
 
     active_job = encin_queue_pop(&encin_job_queue);
     if (active_job == NULL) {
@@ -85,6 +91,11 @@ static void *blocking_worker(void *argument) {
                 stack_to_be_released = NULL;
 
                 getcontext(&worker_context);
+                if (mutex_to_unlock != NULL) {
+                    pthread_mutex_unlock(mutex_to_unlock);
+                    mutex_to_unlock = NULL;
+                }
+
                 if (active_job != NULL) {
                     pthread_mutex_unlock(lock);
 
@@ -157,6 +168,10 @@ int encin_schedule(encin_job *job) {
     return 0;
 }
 
+encin_job *encin_active_job() {
+    return active_job;
+}
+
 void encin_deschedule(void) {
     assert(active_job != NULL);
 
@@ -168,12 +183,21 @@ void encin_deschedule(void) {
 
     getcontext(&active_job->context);
     if (active_job->is_scheduled == false) {
+        mutex_to_unlock = &active_job->lock;
         active_job = NULL;
         setcontext(&worker_context);
     }
 }
 
 void encin_finalize(encin_stack_size stack_size) {
+    pthread_mutex_lock(&active_job->parent->lock);
+    active_job->is_completed = true;
+    if (active_job->parent->awaiting == active_job) {
+        active_job->parent->awaiting = NULL;
+        encin_schedule(active_job->parent);
+    }
+    pthread_mutex_unlock(&active_job->parent->lock);
+
     stack_size_to_be_released = stack_size;
     stack_to_be_released = active_job->context.uc_stack.ss_sp;
 
@@ -185,7 +209,8 @@ void encin_finalize_detached(encin_stack_size stack_size) {
     stack_size_to_be_released = stack_size;
     stack_to_be_released = active_job->context.uc_stack.ss_sp;
 
-    free(active_job); // this causes problems...
+    pthread_mutex_destroy(&active_job->lock);
+    free(active_job);
 
     active_job = NULL;
     setcontext(&releaser_context);
