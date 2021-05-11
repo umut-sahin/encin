@@ -33,7 +33,7 @@ void encin_pool_stop(void);
 
 
 #ifndef ENCIN_BLOCKING_POOL_SIZE_LIMIT
-#define ENCIN_BLOCKING_POOL_SIZE_LIMIT (1)
+#define ENCIN_BLOCKING_POOL_SIZE_LIMIT (512)
 #endif
 static_assert(
     ENCIN_BLOCKING_POOL_SIZE_LIMIT >= 0,
@@ -55,6 +55,8 @@ static_assert(
     ENCIN_BLOCKING_POOL_TIMEOUT <= UINT_MAX,
     "ENCIN_BLOCKING_POOL_TIMEOUT is too large"
 );
+
+int encin_blocking_pool_start(void);
 
 int encin_blocking_pool_grow(void);
 

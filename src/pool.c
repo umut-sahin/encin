@@ -348,6 +348,21 @@ void encin_pool_stop(void) {
 }
 
 
+int encin_blocking_pool_start(){
+    int result;
+
+    result = encin_queue_create(
+        &encin_blocking_job_queue,
+        ENCIN_BLOCKING_JOB_QUEUE_INITIAL_CAPACITY
+    );
+    if (result == -1) {
+        return -1;
+    }
+
+    return 0;
+}
+
+
 int encin_blocking_pool_grow(void) {
     bool there_arent_enough_threads
         = idle_blocking_thread_count < encin_queue_length(&encin_blocking_job_queue);
@@ -356,9 +371,6 @@ int encin_blocking_pool_grow(void) {
         = blocking_thread_count < ENCIN_BLOCKING_POOL_SIZE_LIMIT;
 
     if (there_arent_enough_threads && pool_size_limit_isnt_reached) {
-
-        // TODO: minimize stack
-
         pthread_t tid;
         int result = pthread_create(&tid, NULL, blocking_worker, NULL);
         if (result != 0) {

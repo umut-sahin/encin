@@ -62,6 +62,17 @@ int main(int argc, char *argv[], char *envp[]) {
         goto ENCIN_SIGNAL_START_FAILED;
     }
 
+    result = encin_blocking_pool_start();
+    if (result != 0) {
+        fprintf(
+            stderr,
+            RED("fatal encin error:")" encin blocking job queue creation failed (%s)\n",
+            strerror(errno)
+        );
+        fflush(stderr);
+        goto ENCIN_BLOCKING_POOL_START_FAILED;
+    }
+
     result = encin_pool_start();
     if (result != 0) {
         switch (result) {
@@ -180,6 +191,9 @@ int main(int argc, char *argv[], char *envp[]) {
     encin_pool_stop();
 
     ENCIN_POOL_START_FAILED:
+    encin_blocking_pool_stop();
+
+    ENCIN_BLOCKING_POOL_START_FAILED:
     encin_signal_stop();
 
     ENCIN_SIGNAL_START_FAILED:

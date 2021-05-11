@@ -12,8 +12,8 @@ static int encin_queue_grow(encin_queue *queue) {
         errno = ENOMEM;
         return -1;
     }
+    size_t new_capacity = queue->capacity == 0 ? 1 : queue->capacity * 2;
 
-    size_t new_capacity = queue->capacity * 2;
     encin_job **new_buffer = realloc(queue->buffer, new_capacity * sizeof(encin_job *));
     if (new_buffer == NULL) {
         return -1;

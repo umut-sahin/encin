@@ -17,9 +17,9 @@ int encin(void) {
 
     printf("f(2, 3) = %f\n\n", result);
 
-    encin_task t2 = encin_spawn_void(g, ENCIN_STACK_1M);
-    encin_task t3 = encin_spawn_void(g, ENCIN_STACK_1M);
-    encin_task t4 = encin_spawn_void(g, ENCIN_STACK_1M);
+    encin_task t2 = encin_spawn_blocking_void(g, ENCIN_STACK_1M);
+    encin_task t3 = encin_spawn_blocking_void(g, ENCIN_STACK_1M);
+    encin_task t4 = encin_spawn_blocking_void(g, ENCIN_STACK_1M);
 
     encin_await_void(t2);
     encin_await_void(t3);
