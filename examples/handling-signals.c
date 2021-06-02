@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-void sigint_handler(struct signalfd_siginfo *info, void *argument) {
+void sigint_handler(encin_signal_info *info, void *argument) {
     (void)info;
 
     size_t *press_count_pointer = argument;

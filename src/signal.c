@@ -64,7 +64,7 @@ void encin_signal(int signal, encin_signal_handler handler, void *argument) {
     atomic_store_explicit(&handlers[signal], handler, memory_order_release);
 }
 
-int encin_signal_start_listener(void) {
+int encin_signal_start(void) {
     sigset_t all_signals;
     sigfillset(&all_signals);
     sigprocmask(SIG_BLOCK, &all_signals, NULL);
@@ -112,7 +112,7 @@ int encin_signal_start_listener(void) {
     return 0;
 }
 
-void encin_signal_stop_listener(void) {
+void encin_signal_stop(void) {
     kill(pid, SIGUSR2);
     pthread_join(tid, NULL);
 

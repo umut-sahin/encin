@@ -12,8 +12,8 @@ static int encin_queue_grow(encin_queue *queue) {
         errno = ENOMEM;
         return -1;
     }
+    size_t new_capacity = queue->capacity == 0 ? 1 : queue->capacity * 2;
 
-    size_t new_capacity = queue->capacity * 2;
     encin_job **new_buffer = realloc(queue->buffer, new_capacity * sizeof(encin_job *));
     if (new_buffer == NULL) {
         return -1;
@@ -99,6 +99,31 @@ int encin_queue_push(encin_queue *queue, encin_job *job) {
 
     pthread_cond_signal(&queue->cv);
     pthread_mutex_unlock(&queue->lock);
+    return 0;
+}
+
+int encin_queue_push_without_locking(encin_queue *queue, encin_job *job) {
+    if (queue->bottom <= queue->top) {
+        if (queue->top == queue->capacity && queue->bottom == 0) {
+            if (encin_queue_grow(queue) == -1) {
+                return -1;
+            }
+        }
+    } else {
+        if (queue->bottom - 1 == queue->top) {
+            if (encin_queue_grow(queue) == -1) {
+                return -1;
+            }
+        }
+    }
+
+    queue->buffer[queue->top] = job;
+
+    queue->top++;
+    if (queue->top == queue->capacity) {
+        queue->top = 0;
+    }
+
     return 0;
 }
 

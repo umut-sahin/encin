@@ -1,8 +1,18 @@
 #pragma once
 
+#include <assert.h>
+#include <encin/stack.h>
 #include <limits.h>
 
-void encin_deschedule();
+int encin_schedule(encin_job *job);
+
+encin_job *encin_active_job();
+
+void encin_deschedule(void);
+
+void encin_finalize(encin_stack_size stack_size);
+
+void encin_finalize_detached(encin_stack_size stack_size);
 
 
 #ifndef ENCIN_POOL_SIZE
@@ -45,6 +55,8 @@ static_assert(
     ENCIN_BLOCKING_POOL_TIMEOUT <= UINT_MAX,
     "ENCIN_BLOCKING_POOL_TIMEOUT is too large"
 );
+
+int encin_blocking_pool_start(void);
 
 int encin_blocking_pool_grow(void);
 
