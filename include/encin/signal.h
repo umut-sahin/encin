@@ -4,7 +4,9 @@
 #include <signal.h>
 #include <sys/signalfd.h>
 
-typedef void (*encin_signal_handler)(struct signalfd_siginfo *info, void *argument);
+typedef struct signalfd_siginfo encin_signal_info;
+
+typedef void (*encin_signal_handler)(encin_signal_info *info, void *argument);
 
 void encin_signal(int signal, encin_signal_handler handler, void *argument);
 
