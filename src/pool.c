@@ -172,6 +172,23 @@ encin_job *encin_active_job() {
     return active_job;
 }
 
+void encin_yield(void) {
+    assert(active_job != NULL);
+
+    active_job->encin_status_ = encin_status;
+    active_job->errno_ = errno;
+
+    active_job->is_scheduled = false;
+    asm volatile("" : : "r,m"(active_job->is_scheduled) : "memory");
+
+    getcontext(&active_job->context);
+    if (active_job->is_scheduled == false) {
+        active_job = NULL;
+        encin_schedule(active_job);
+        setcontext(&worker_context);
+    }
+}
+
 void encin_deschedule(void) {
     assert(active_job != NULL);
 

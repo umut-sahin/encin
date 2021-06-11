@@ -9,9 +9,11 @@ project(
 add_library(
     encin
 
+    src/io.c
     src/main.c
     src/pool.c
     src/queue.c
+    src/reactor.c
     src/result.c
     src/signal.c
     src/stack.c
@@ -41,6 +43,8 @@ target_compile_options(
 target_include_directories(encin PUBLIC include)
 
 target_link_libraries(encin PUBLIC pthread)
+
+target_link_libraries(encin PUBLIC uring)
 
 if (CMAKE_PROJECT_NAME STREQUAL encin)
     add_subdirectory(examples)

@@ -17,7 +17,7 @@ typedef struct encin_job {
 
     bool is_completed;
     struct encin_job *parent;
-    struct encin_job *awaiting;
+    void *awaiting;
     pthread_mutex_t lock;
 
 } encin_job;

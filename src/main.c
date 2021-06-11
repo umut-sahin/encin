@@ -66,7 +66,7 @@ int main(int argc, char *argv[], char *envp[]) {
     if (result != 0) {
         fprintf(
             stderr,
-            RED("fatal encin error:")" encin blocking job queue creation failed (%s)\n",
+            RED("fatal encin error:")" blocking job queue creation failed (%s)\n",
             strerror(errno)
         );
         fflush(stderr);
@@ -79,7 +79,7 @@ int main(int argc, char *argv[], char *envp[]) {
             case -1: {
                 fprintf(
                     stderr,
-                    RED("fatal encin error:")" encin pool is misconfigured (%s)\n",
+                    RED("fatal encin error:")" pool is misconfigured (%s)\n",
                     "ENCIN_POOL_SIZE is not a positive number"
                 );
                 fflush(stderr);
@@ -88,7 +88,7 @@ int main(int argc, char *argv[], char *envp[]) {
             case -2: {
                 fprintf(
                     stderr,
-                    RED("fatal encin error:")" encin pool is misconfigured (%s)\n",
+                    RED("fatal encin error:")" pool is misconfigured (%s)\n",
                     "ENCIN_POOL_SIZE is too large"
                 );
                 fflush(stderr);
@@ -97,7 +97,7 @@ int main(int argc, char *argv[], char *envp[]) {
             case -3: {
                 fprintf(
                     stderr,
-                    RED("fatal encin error:")" encin job queue creation failed (%s)\n",
+                    RED("fatal encin error:")" job queue creation failed (%s)\n",
                     strerror(errno)
                 );
                 fflush(stderr);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[], char *envp[]) {
             case -4: {
                 fprintf(
                     stderr,
-                    RED("fatal encin error:")" encin pool creation failed (%s)\n",
+                    RED("fatal encin error:")" pool creation failed (%s)\n",
                     strerror(errno)
                 );
                 fflush(stderr);
@@ -117,6 +117,34 @@ int main(int argc, char *argv[], char *envp[]) {
             }
         }
         goto ENCIN_POOL_START_FAILED;
+    }
+
+    result = encin_reactor_start();
+    if (result != 0) {
+        switch (result) {
+            case -1: {
+                fprintf(
+                    stderr,
+                    RED("fatal encin error:")" ring creation failed (%s)\n",
+                    strerror(errno)
+                );
+                fflush(stderr);
+                break;
+            }
+            case -2: {
+                fprintf(
+                    stderr,
+                    RED("fatal encin error:")" reactor creation failed (%s)\n",
+                    strerror(errno)
+                );
+                fflush(stderr);
+                break;
+            }
+            default: {
+                __builtin_unreachable();
+            }
+        }
+        goto ENCIN_REACTOR_START_FAILED;
     }
 
     void *stack = encin_stack_acquire(ENCIN_MAIN_STACK_SIZE);
@@ -175,8 +203,9 @@ int main(int argc, char *argv[], char *envp[]) {
 
     pthread_mutex_destroy(&job.lock);
     encin_stack_release(ENCIN_MAIN_STACK_SIZE, stack);
-    encin_blocking_pool_stop();
+    encin_reactor_stop();
     encin_pool_stop();
+    encin_blocking_pool_stop();
     encin_signal_stop();
     pthread_cond_destroy(&condvar);
 
@@ -188,6 +217,9 @@ int main(int argc, char *argv[], char *envp[]) {
     encin_stack_release(ENCIN_MAIN_STACK_SIZE, stack);
 
     ENCIN_STACK_ACQUIRE_FAILED:
+    encin_reactor_stop();
+
+    ENCIN_REACTOR_START_FAILED:
     encin_pool_stop();
 
     ENCIN_POOL_START_FAILED:

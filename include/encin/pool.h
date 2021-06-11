@@ -8,6 +8,8 @@ int encin_schedule(encin_job *job);
 
 encin_job *encin_active_job();
 
+void encin_yield(void);
+
 void encin_deschedule(void);
 
 void encin_finalize(encin_stack_size stack_size);
