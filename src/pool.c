@@ -55,11 +55,6 @@ static void *worker(void *argument) {
 }
 
 
-struct timespec timeout = {
-    .tv_sec = ENCIN_BLOCKING_POOL_TIMEOUT / 1000,
-    .tv_nsec = (ENCIN_BLOCKING_POOL_TIMEOUT % 1000) * 1000000,
-};
-
 static size_t blocking_thread_count = 0;
 
 static size_t idle_blocking_thread_count = 0;
@@ -110,6 +105,11 @@ static void *blocking_worker(void *argument) {
             }
         }
         idle_blocking_thread_count += 1;
+
+        struct timespec timeout;
+        clock_gettime(CLOCK_REALTIME, &timeout);
+        timeout.tv_sec += ENCIN_BLOCKING_POOL_TIMEOUT / 1000;
+        timeout.tv_nsec += (ENCIN_BLOCKING_POOL_TIMEOUT % 1000) * 1000000;
 
         int result = pthread_cond_timedwait(cv, lock, &timeout);
         if (result == ETIMEDOUT && encin_queue_length(&encin_blocking_job_queue) == 0) {
@@ -183,8 +183,8 @@ void encin_yield(void) {
 
     getcontext(&active_job->context);
     if (active_job->is_scheduled == false) {
-        active_job = NULL;
         encin_schedule(active_job);
+        active_job = NULL;
         setcontext(&worker_context);
     }
 }
@@ -207,13 +207,14 @@ void encin_deschedule(void) {
 }
 
 void encin_finalize(encin_stack_size stack_size) {
-    pthread_mutex_lock(&active_job->parent->lock);
+    pthread_mutex_t *parent_lock = &active_job->parent->lock;
+    pthread_mutex_lock(parent_lock);
     active_job->is_completed = true;
     if (active_job->parent->awaiting == active_job) {
         active_job->parent->awaiting = NULL;
         encin_schedule(active_job->parent);
     }
-    pthread_mutex_unlock(&active_job->parent->lock);
+    pthread_mutex_unlock(parent_lock);
 
     stack_size_to_be_released = stack_size;
     stack_to_be_released = active_job->context.uc_stack.ss_sp;
