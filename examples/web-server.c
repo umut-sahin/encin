@@ -80,7 +80,7 @@ int encin(void) {
         int client = encin_await_io(accepting);
 
         atomic_fetch_add_explicit(&clients, 1, memory_order_relaxed);
-        encin_spawn_blocking_detached(serve, client, &clients, ENCIN_STACK_256K);
+        encin_spawn_detached(serve, client, &clients, ENCIN_STACK_256K);
     }
 
     while (atomic_load_explicit(&clients, memory_order_relaxed) > 0) {
