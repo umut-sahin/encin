@@ -13,24 +13,31 @@ static void *reactor(void *argument) {
 
     struct io_uring_cqe *cqe;
     while (true) {
-        io_uring_wait_cqe(&encin_ring, &cqe);
+        int result;
 
-        int result = cqe->res;
+        result = io_uring_wait_cqe(&encin_ring, &cqe);
+        if (result == -EINTR) {
+            continue;
+        }
+
+        int value = cqe->res;
         encin_io_job *job = io_uring_cqe_get_data(cqe);
+
         io_uring_cqe_seen(&encin_ring, cqe);
 
         if (job == NULL) {
             break;
         }
 
-        pthread_mutex_lock(&job->parent->lock);
-        job->result = result;
+        pthread_mutex_t *parent_lock = &job->parent->lock;
+        pthread_mutex_lock(parent_lock);
+        job->result = value;
         job->is_completed = true;
         if (job->parent->awaiting == job) {
             job->parent->awaiting = NULL;
             encin_schedule(job->parent);
         }
-        pthread_mutex_unlock(&job->parent->lock);
+        pthread_mutex_unlock(parent_lock);
     }
 
     return NULL;
